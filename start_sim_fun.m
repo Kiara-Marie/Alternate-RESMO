@@ -1,4 +1,4 @@
-function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0] = start_sim_fun(density,N,n,sigma_z,sigma_x,t_max,steps,dirname,name)
+function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0] = start_sim_fun(density,N,n,sigma_z,sigma_x,t_max,steps,dirname,name,noHydro)
 %START_SIM_FUN This part solves the rate equations
         %     density = %peak density in um-3 (usually around 0.04)
         %     N = number of shells
@@ -27,11 +27,15 @@ function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]
 
     mkdir(dirname);
     filename= [dirname , '\' , name];
-    
+    if noHydro
+        single = noHydro;
+    else
+        single = false;
+    end
     %solve rate equations
-    [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]=shell_rate_eqn_sim(d, pos_x, pos_y, pos_z, n, t_max/steps, t_max, false);
+    [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]=shell_rate_eqn_sim(d, pos_x, pos_y, pos_z, n, t_max/steps, t_max, single);
     %save workspace
-    %save(filename +"_den0_"+string(nden(0,0))+  ".mat");
+    save(filename +"_den0_"+string(nden(1,1))+  ".mat");
     
     toc
 end

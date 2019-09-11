@@ -22,7 +22,7 @@
 
 function [t,nden,eden,deac_n_min,deac_dr,deac_pd,Te,r_x,r_y,r_z,v_x,v_y,v_z,v,y0]=shell_rate_eqn_sim(den0, rx ,ry, rz ,n0, dt, t_final, single)
 
-killPenning = true;
+killPenning = false;
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Initial conditions %
@@ -184,17 +184,17 @@ ncrit=@(T)round(sqrt(Ry/(kB*T)));  % to calculate n-max (got by fitting)
         diff_rz=diff(RZ',1,2)';
         
         if single
-            dux=0;%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_rx)./RX(2:end));
-            duy=0;%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_ry)./RY(2:end));
-            duz=0;%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_rz)./RZ(2:end));
+            dux=zeros(N);%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_rx)./RX(2:end));
+            duy=zeros(N);%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_ry)./RY(2:end));
+            duz=zeros(N);%*mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_rz)./RZ(2:end));
             
             
-            D_UX= 0;%*dux*RX; %% added 4 zeros
-            D_UY= 0;%*duy*RY;
-            D_UZ= 0;%*duz*RZ;
+            D_UX= zeros(N);%*dux*RX; %% added 4 zeros
+            D_UY= zeros(N);%*duy*RY;
+            D_UZ= zeros(N);%*duz*RZ;
             
             
-            D_V=0;%*4/3*pi*( D_RX.*RY.*RZ+RX.*D_RY.*RZ+RX.*RY.*D_RZ - ( [0; D_RX(1:end-1)].*[0; RY(1:end-1)].*[0; RZ(1:end-1)]+[0; RX(1:end-1)].*[0; D_RY(1:end-1)].*[0; RZ(1:end-1)]+[0; RX(1:end-1)].*[0; RY(1:end-1)].*[0; D_RZ(1:end-1)] ));
+            D_V=zeros(N-1);%*4/3*pi*( D_RX.*RY.*RZ+RX.*D_RY.*RZ+RX.*RY.*D_RZ - ( [0; D_RX(1:end-1)].*[0; RY(1:end-1)].*[0; RZ(1:end-1)]+[0; RX(1:end-1)].*[0; D_RY(1:end-1)].*[0; RZ(1:end-1)]+[0; RX(1:end-1)].*[0; RY(1:end-1)].*[0; D_RZ(1:end-1)] ));
             
         else
             dux=mean((-kBm*T*(diff_rho./eden(1:end-1))./diff_rx)./RX(2:end));

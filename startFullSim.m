@@ -15,7 +15,7 @@ addpath(addToPath);
              sigma_x=0.70*1000; %um
 states = 100;
 
-[time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0] = start_sim_fun(density,N,n,sigma_z,sigma_x,t_max,steps,dirname,name);
+[time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0] = start_sim_fun(density,N,n,sigma_z,sigma_x,t_max,steps,dirname,name,false);
 %particlesFromShells(rx,ry,rz,vx,vy,vz,nden,eden,NP, states, t_max,steps);
 
 
