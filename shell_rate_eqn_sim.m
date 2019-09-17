@@ -20,7 +20,7 @@
 
 %save workspace save('den0=1 n0=50, t0=50.mat','t','nden','eden','aden','Te')
 
-function [t,nden,eden,deac_n_min,deac_dr,deac_pd,Te,r_x,r_y,r_z,v_x,v_y,v_z,v,y0]=shell_rate_eqn_sim(den0, rx ,ry, rz ,n0, dt, t_final, single)
+function [t,nden,eden,deac_n_min,deac_dr,deac_pd,Te,r_x,r_y,r_z,v_x,v_y,v_z,v,y0]=shell_rate_eqn_sim(den0, rx ,ry, rz ,n0, numTimeSteps, t_final, single)
 
 killPenning = false;
 
@@ -60,8 +60,8 @@ uz=zeros(size(rx));
 uy=zeros(size(rx));
 
 volume= 4/3*pi* (rx.*ry.*rz - [0; rx(1:end-1)].*[0; ry(1:end-1)].*[0; rz(1:end-1)]);
-tspan=0:dt:t_final;%linspace(0,t_final,500);
 
+tspan= linspace(0,t_final,numTimeSteps);
 
 % Sets initial conditions for electron and n-level distributions:
 % no initial electrons -> calc. Penning seed electrons (look up Robicheaux)
@@ -299,8 +299,8 @@ kpd_const=kPD(nl);
 
 % options=odeset('reltol',1e-8);
 % used to be:
-% [t,y]=ode23(@(t,y)eqrateode(t,y),tspan,y0);
-[t,y]=ode23(@(t,y)eqrateode(t,y),[0 t_final],y0);
+[t,y]=ode23(@(t,y)eqrateode(t,y),tspan,y0);
+%[t,y]=ode23(@(t,y)eqrateode(t,y),[0 t_final],y0);
 
 
 nden=y(:,1:ns*N);                   % pick out density over distribution of n

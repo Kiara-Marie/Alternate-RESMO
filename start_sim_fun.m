@@ -33,9 +33,10 @@ function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]
         single = false;
     end
     %solve rate equations
-    [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]=shell_rate_eqn_sim(d, pos_x, pos_y, pos_z, n, t_max/steps, t_max, single);
+    [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]=shell_rate_eqn_sim(d, pos_x, pos_y, pos_z, n, steps, t_max, single);
     %save workspace
-    save(filename +"_den0_"+string(nden(1,1))+  ".mat");
+   % save(filename +"_den0_"+string(nden(1,1))+  ".mat");
+   save("withTSpan.mat");
     
     toc
 end
