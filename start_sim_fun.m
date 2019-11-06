@@ -26,7 +26,7 @@ function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]
     d=arrayfun(@(z) d_p*exp(-(z^2)/(2*sigma_z^2)),pos);
 
     mkdir(dirname);
-    filename= [dirname , '\' , name];
+   % filename= [dirname , '\' , name];
     if noHydro
         single = noHydro;
     else
@@ -36,7 +36,7 @@ function [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]
     [time,nden,eden,deac_n_min,deac_dr,deac_pd,Te,rx,ry,rz,vx,vy,vz,vol,y0]=shell_rate_eqn_sim(d, pos_x, pos_y, pos_z, n, steps, t_max, single);
     %save workspace
    % save(filename +"_den0_"+string(nden(1,1))+  ".mat");
-   save("withTSpan.mat");
+  % save("withTSpan.mat");
     
     toc
 end
