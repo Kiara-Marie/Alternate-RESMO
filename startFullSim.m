@@ -10,7 +10,6 @@ addpath(addToPath);
         %     sigma_x=0.70*1000;
         %     t_max = max time in ns
         %     steps = how many time steps
-        %     NP = number of particles (for particle model)
               sigma_z=1*1000; %Gaussian width in um
              sigma_x=0.70*1000; %um
 %states = 100;
