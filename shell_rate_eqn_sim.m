@@ -61,7 +61,6 @@ uy=zeros(size(rx));
 
 volume= 4/3*pi* (rx.*ry.*rz - [0; rx(1:end-1)].*[0; ry(1:end-1)].*[0; rz(1:end-1)]);
 
-tspan= linspace(0,t_final,numTimeSteps);
 
 % Sets initial conditions for electron and n-level distributions:
 % no initial electrons -> calc. Penning seed electrons (look up Robicheaux)
@@ -299,8 +298,12 @@ kpd_const=kPD(nl);
 
 % options=odeset('reltol',1e-8);
 % used to be:
-[t,y]=ode23(@(t,y)eqrateode(t,y),tspan,y0);
-%[t,y]=ode23(@(t,y)eqrateode(t,y),[0 t_final],y0);
+if (numTimeSteps ~= 0)
+    tspan= linspace(0,t_final,numTimeSteps);
+    [t,y]=ode23(@(t,y)eqrateode(t,y),tspan,y0);
+else
+    [t,y] = ode23(@(t,y)eqrateode(t,y), [0 t_final], y0);
+end
 
 
 nden=y(:,1:ns*N);                   % pick out density over distribution of n
