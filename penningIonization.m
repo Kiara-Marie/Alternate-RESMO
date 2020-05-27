@@ -21,11 +21,14 @@ for ii=1:N %loop though all shells
     % multiplying by eden gives it the correct magnitude
     nden(ind) = nden(ind) + (primaryEden*f(np/n0)/sum(f(np/n0)))';
     nden(nl==n0)= primaryRden;              % set n0 to rden
+    figure(1);
+    ax = gca;
+    histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));
+    spMean = round(sum(nden(ind).*np')/sum(nden(ind)));
     
     
     penningPartnerProportion = primaryEden/(primaryEden+primaryRden);
     remainingProportion = primaryRden/(primaryEden+primaryRden);
-    spMean = fix(n0/sqrt(2));
     n_avg = fix((spMean * penningPartnerProportion) + (n0 * remainingProportion));
     combinedDen = den0(ii) - primaryEden;
     [PF, secondaryEden, secondaryRden] = penningfraction(n_avg, combinedDen);
@@ -39,6 +42,9 @@ for ii=1:N %loop though all shells
     spInd = 1:length(secondaryPenningN);
     secondaryPenningDist = f(secondaryPenningN/spMean)/sum(f(secondaryPenningN/spMean));
     nden(spInd) = nden(spInd) + (secondaryEden*penningPartnerProportion*secondaryPenningDist)';
+    figure(2);
+    ax = gca;
+    histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));
     
     
     
