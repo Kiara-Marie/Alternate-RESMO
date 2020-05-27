@@ -60,7 +60,7 @@ uy=zeros(size(rx));
 volume= 4/3*pi* (rx.*ry.*rz - [0; rx(1:end-1)].*[0; ry(1:end-1)].*[0; rz(1:end-1)]);
 
 
-[T_PENNING,deac,D_DEAC_N_MIN,nden,NL,DEN0,NDEN,EDEN,DEAC]= penningIonization(ns,n_min,n0,den0,N,firstn,nl,Ry,kB,penningTimes);
+[T_PENNING,deac,D_DEAC_N_MIN,nden,NL,DEN0,NDEN,EDEN,DEAC]= penningIonization(ns,n_min,n0,den0,N,firstn,nl,Ry,kB);
 
 
 %the penning temperature is equal for all densities! (density scaling factor cancels)

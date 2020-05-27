@@ -24,5 +24,4 @@ function [PenningFraction, eden, rden]=penningfraction(n,den)     % den in 10^12
     PenningFraction = PenningFraction_analytic *0.9;         % 90% ionization within certain time (assume rest non-interactive)
     eden=(PenningFraction/2)*den;      % the dens. of electrons produce is half the proportion (1e- per partner)
     rden=(1-PenningFraction)*den;    % this is remaining density of rydbergs
-
 end
