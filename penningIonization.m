@@ -50,7 +50,7 @@ for ii=1:N %loop though all shells
     nden(spInd) = nden(spInd) + (secondaryEden*penningPartnerProportion*secondaryPenningDist)';
     
 %     histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));    
-%     eden = primaryEden + secondaryEden;
+    eden = primaryEden + secondaryEden;
     
     % Set initial temperature:    (Robicheaux 2005 JPhysB)
     T_PENNING(ii)=(-Ry*den0(ii)/n0^2 + Ry*nden(n0)/n0^2 + Ry*sum(nden(nl < n0)./nl(nl < n0).^2) )*1/(3/2*kB*eden); % by energy conservation
