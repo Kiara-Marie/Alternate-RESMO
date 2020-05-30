@@ -26,32 +26,43 @@ for ii=1:N %loop though all shells
     nden(nl==n0)= primaryRden;              % set n0 to rden
     nden(1:n_min)=zeros(n_min,1);
 %     figure(1);
-%     ax = gca;
-%     histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));
-%     hold on;
+    ax = gca;
+    %histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));
+   % hold on;
     spMean = round(sum(nden(ind).*np')/sum(nden(ind)));
     
     
     penningPartnerProportion = primaryEden/(primaryEden+primaryRden);
     remainingProportion = primaryRden/(primaryEden+primaryRden);
     n_avg = round((spMean * penningPartnerProportion) + (n0 * remainingProportion));
-    combinedDen = den0(ii) - primaryEden;
-    [PF, secondaryEden, secondaryRden] = penningfraction(n_avg, combinedDen);
+    combinedDen = den0(ii) - primaryEden - 0.5*primaryRden;
+    [PF, secondaryEdenN0, secondaryRdenN0] = penningfraction(n0, 0.5*primaryRden);
     
-    % multiply by secondaryEden, scaled by which proportion were n0 gives it the correct magnitude
-    nden(ind)= nden(ind) + (secondaryEden*remainingProportion*f(np/n0)/sum(f(np/n0)))';
-    nden(ind)= nden(ind) - (secondaryEden*penningPartnerProportion*f(np/n0)/sum(f(np/n0)))';
-    nden(nl==n0) = nden(nl==n0) - secondaryEden*remainingProportion;
+    
+    [PF, secondaryEdenOther, secondaryRdenOther] = penningfraction(n_avg, combinedDen);
+    % multiply by secondaryEden, scaled by which proportion, where n0 gives it the correct magnitude
+    nden(ind)= nden(ind) + (secondaryEdenN0*f(np/n0)/sum(f(np/n0)))';
+    nden(ind)= nden(ind) - (secondaryEdenOther*penningPartnerProportion*f(np/n0)/sum(f(np/n0)))';
+    nden(nl==n0) = nden(nl==n0) - secondaryEdenN0;
+    nden(nl==n0) = nden(nl==n0) - remainingProportion*secondaryEdenOther;
     nden(1:n_min)=zeros(n_min,1);
     
     secondaryPenningN=firstn:fix(spMean/sqrt(2));      % Array of n states allowed after Penn ion
     spInd = 1:length(secondaryPenningN);
     secondaryPenningDist = f(secondaryPenningN/spMean)/sum(f(secondaryPenningN/spMean));
-    nden(spInd) = nden(spInd) + (secondaryEden*penningPartnerProportion*secondaryPenningDist)';
+    nden(spInd) = nden(spInd) + (secondaryEdenOther*secondaryPenningDist)';
     
-%     histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));    
-    eden = primaryEden + secondaryEden;
+    %histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));    
+    eden = primaryEden + secondaryEdenN0 + secondaryEdenOther;
     
+    
+    [PF, tertiaryEden, tertiaryRden] = penningfraction(spMean, secondaryRdenOther);
+    % multiply by secondaryEden, scaled by which proportion, where n0 gives it the correct magnitude
+
+    nden(spInd) = nden(spInd) + (tertiaryEden*secondaryPenningDist)';
+    
+    histogram(ax,'BinEdges',nl(1:n0+1)','BinCounts',nden(1:n0));    
+    eden = primaryEden + secondaryEdenN0 + secondaryEdenOther + tertiaryEden;
     % Set initial temperature:    (Robicheaux 2005 JPhysB)
     T_PENNING(ii)=(-Ry*den0(ii)/n0^2 + Ry*nden(n0)/n0^2 + Ry*sum(nden(nl < n0)./nl(nl < n0).^2) )*1/(3/2*kB*eden); % by energy conservation
     deac=sum(nden(1:n_min));    % allow n<=n_min to decay
