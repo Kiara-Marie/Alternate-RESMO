@@ -105,6 +105,8 @@ for ii=1:N %loop though all shells
     
 end
 
+eden0 = eden;
+
 
 %the penning temperature is equal for all densities! (density scaling factor cancels)
 T_penning = sum(T_PENNING.*(volume').*den0)/sum((volume').*den0); %calculate equlibrated penning temperature by weigted average
@@ -252,12 +254,21 @@ ncrit=@(T)round(sqrt(Ry/(kB*T)));  % to calculate n-max (got by fitting)
             D_DEAC_DR(z)=kDR(T)*eden(z)^2;
             
             %comment to deactivate PREDISSOCIATION
-            D_DEAC_PD(:,z)=kpd_const.*nden(h:k);
-            
+            %%% New code, August 2020. Comment this line out, replace with 
+            %%% one that includes electron density parameter 
+            %D_DEAC_PD(:,z)=kpd_const.*nden(h:k);
+            %e_fraction = eden(z) / eden0(z);
+            %D_DEAC_PD(:,z) = kpd_const.*nden(h:k)*e_fraction;
+            %%% End new code
             dv=(D_V(z)/V(z));
             
             D_EDEN_OLD(z)=sum(d_ion-d_tbr)+d_n_npion;
             D_EDEN(z)=D_EDEN_OLD(z)-D_DEAC_DR(z)-eden(z)*dv;
+            
+            %%% New code, August 2020 %%%
+            d_amb = kAMB() * eden(z);
+            D_EDEN(z) = D_EDEN(z) - d_amb;
+            %%% End new code %%%
             
             d_nden=d_tbr-d_ion-d_n_np+d_np_n;
             D_NDEN_OLD(:,z)=d_nden; %array whithout radiative decay for temperature calculation
@@ -265,9 +276,13 @@ ncrit=@(T)round(sqrt(Ry/(kB*T)));  % to calculate n-max (got by fitting)
             D_DEAC(z)=sum(d_nden(1:n_min));     % aden is the number of Ry's decayed radiatively to the groundstate
             D_DEAC_N_MIN(:,z)=d_nden(1:n_min);
             
-            d_nden=d_nden-D_DEAC_PD(:,z)-nden(h:k)*dv; %reduce by predissociation
-            d_nden(1:n_min)=zeros(n_min,1);
+            %d_nden=d_nden-D_DEAC_PD(:,z)-nden(h:k)*dv; %reduce by predissociation   
             
+            %%% New code August 2020 %%%
+            d_ct = nden(h:k) * eden(z)^2 * kCT();
+            d_nden = d_nden + d_ct;
+            %%% End new code %%%
+            d_nden(1:n_min)=zeros(n_min,1); 
             D_NDEN(:,z)=d_nden;
             
             D_DEAC_DR(z)=D_DEAC_DR(z)-deac_dr(z)*dv;
